@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
-
-const p = path.join(
+const db = require('../util/database')
+/*const p = path.join(
   path.dirname(process.mainModule.filename),
   'data',
   'products.json'
-);
+);*/
 
-const getProductsFromFile = cb => {
+/*const getProductsFromFile = cb => {
   fs.readFile(p, (err, fileContent) => {
     if (err) {
       cb([]);
@@ -15,7 +15,7 @@ const getProductsFromFile = cb => {
       cb(JSON.parse(fileContent));
     }
   });
-};
+};*/
 
 module.exports = class Product {
   constructor(title, imageUrl, description, price) {
@@ -26,25 +26,28 @@ module.exports = class Product {
   }
 
   save() {
-    this.id = Math.random().toString();
+    /*this.id = Math.random().toString();
     getProductsFromFile(products => {
       products.push(this);
       fs.writeFile(p, JSON.stringify(products), err => {
         console.log(err);
       });
-    });
+    });*/
   }
 
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
+  static fetchAll() {
+    //getProductsFromFile(cb);
+    return db.execute('SELECT * FROM products');
   }
-  static findById(id, cb) {
-    getProductsFromFile(products => {
+  static findById(id) {
+    /*getProductsFromFile(products => {
       const product = products.find(p => p.id === id);
       cb(product);
-    })
+    })*/
+    return db.execute('SELECT * FROM products WHERE id = ?', [id]);
+
   }
-  static deleteProductById(id) {
+  /*static deleteProductById(id) {
     fs.readFile(p, (err, fileContent) => {
       if (err) {
         return;
@@ -57,5 +60,5 @@ module.exports = class Product {
         console.log(err);
       });
     });
-  }
+  }*/
 };
